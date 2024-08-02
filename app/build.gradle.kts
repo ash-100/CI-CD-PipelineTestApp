@@ -20,18 +20,18 @@ android {
         }
     }
 
-    signingConfigs {
-        create("release"){
-            storeFile = file("keystore/keystore.jks")
-            storePassword = System.getenv("SIGNING_KEYSTORE_PASSWORD")
-            keyAlias = System.getenv("SIGNING_ALIAS")
-            keyPassword = System.getenv("SIGNING_ALIAS_PASSWORD")
-        }
-    }
+    //signingConfigs {
+      //  create("release"){
+        //    storeFile = file("keystore/keystore.jks")
+          //  storePassword = System.getenv("SIGNING_KEYSTORE_PASSWORD")
+            //keyAlias = System.getenv("SIGNING_ALIAS")
+            //keyPassword = System.getenv("SIGNING_ALIAS_PASSWORD")
+        //}
+    //}
 
     buildTypes {
         getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
+           // signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
