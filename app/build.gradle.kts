@@ -22,7 +22,7 @@ android {
 
     signingConfigs {
         create("release"){
-            storeFile = file("../keystore.jks")
+            storeFile = file("keystore/keystore.jks")
             storePassword = System.getenv("SIGNING_KEYSTORE_PASSWORD")
             keyAlias = System.getenv("SIGNING_ALIAS")
             keyPassword = System.getenv("SIGNING_ALIAS_PASSWORD")
