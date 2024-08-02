@@ -35,16 +35,4 @@ jobs:
         run: |
           echo $ENCODED_STRING > keystore-b64.txt
           base64 -d keystore-b64.txt > keystore.jks
-  
-      - name: Build Release apk
-        env:
-          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
-          RELEASE_KEYSTORE_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
-          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-        run: ./gradlew assembleRelease --stacktrace
-  
-      - name: Upload Release Build to Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-           name: release-artifacts
-           path: ${{ steps.releaseApk.outputs.apkfile }}
+      - run : echo ${{secrets.SIGNING_KEYSTORE_PASSWORD}}
