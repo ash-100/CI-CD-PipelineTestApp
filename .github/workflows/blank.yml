@@ -26,11 +26,11 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       - name: build prod
-        run: ./gradlew app:bundleRelease
+        run: ./gradlew build
         env:
-          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_ALIAS_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
+          SIGNING_ALIAS: ${{ secrets.SIGNING_ALIAS }}
+          SIGNING_ALIAS_PASSWORD: ${{ secrets.SIGNING_ALIAS_PASSWORD }}
+          SIGNING_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
