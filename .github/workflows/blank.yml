@@ -26,7 +26,7 @@ jobs:
         id: sign_aab
         uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: app/build/outputs/apk/release
+          releaseDirectory: /home/runner/work/CI-CD-PipelineTestApp/CI-CD-PipelineTestApp/android/app/release
           signingKeyBase64: ${{ secrets.KEYSTORE_BASE_64 }}
           alias: ${{ secrets.SIGNING_ALIAS }}
           keyStorePassword: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
