@@ -20,28 +20,10 @@ android {
         }
     }
 
-    signingConfigs {
-        create("release"){
-            
-            val tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
-            val dir = File(tmpFilePath)
-            val allFilesFromDir = dir.listFiles()
-            
-            if (allFilesFromDir != null && allFilesFromDir.isNotEmpty()) {
-                val keystoreFile = allFilesFromDir.first()
-                val newFilePath = "keystore/keystore.jks"
-                keystoreFile.renameTo(File(newFilePath))
-            }
-            storePassword = System.getenv("SIGNING_KEYSTORE_PASSWORD")
-            storeFile = file("keystore/keystore.jks")            
-            keyAlias = System.getenv("SIGNING_ALIAS")
-            keyPassword = System.getenv("SIGNING_ALIAS_PASSWORD")
-        }
-    }
 
     buildTypes {
         getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
+            //signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
