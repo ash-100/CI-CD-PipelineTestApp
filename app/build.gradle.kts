@@ -33,7 +33,7 @@ android {
             }
 
             storePassword = System.getenv("SIGNING_KEYSTORE_PASSWORD")
-            storeFile = file("keystore.jks")            
+            storeFile = file("keystore/keystore.jks")            
             keyAlias = System.getenv("SIGNING_ALIAS")
             keyPassword = System.getenv("SIGNING_ALIAS_PASSWORD")
         }
