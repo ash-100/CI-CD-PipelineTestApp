@@ -17,4 +17,4 @@ jobs:
           fileName: 'keystore/keystore.jks'
           encodedString: ${{ secrets.KEYSTORE_BASE_64 }}
       - name: List files
-        run: ls -la keystore
+        run: ls -la 
