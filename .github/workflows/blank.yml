@@ -22,4 +22,4 @@ jobs:
           fileName: 'keystore/keystore.jks'
           encodedString: ${{ secrets.KEYSTORE_BASE_64 }}
       - name: List files
-        run: ls -la keystore || echo "Failed to list files. Directory might not exist."
+        run: ls -la keystore 
