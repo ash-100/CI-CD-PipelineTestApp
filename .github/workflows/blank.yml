@@ -55,8 +55,11 @@ jobs:
         run: basename "$(pwd)"
 
       - run: echo "Build status report=${{ job.status }}."
+      
       - name: Upload App Bundle
         uses: actions/upload-artifact@v1
         with:
           name: aab
-          path: app/build/outputs/apk/release/*.apk
+          path: app/build/outputs/apk/release/ContentGenie-v1--release-unsigned.apk
+
+      - run: echo "${SIGNED_RELEASE_FILE}"
