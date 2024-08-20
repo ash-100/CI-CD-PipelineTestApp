@@ -35,11 +35,11 @@ jobs:
         # override default build-tools version (33.0.0) -- optional
           BUILD_TOOLS_VERSION: "34.0.0"
 
-      - name: Rename 
-        run: 
+      - name: Rename signed APK file
+        run: |
           cd app/build/outputs/apk/release
-          for file in *-unsigned-signed.apk; do
-            mv "$file" "${file%-unsigned-signed.apk}.apk"
+          for file in *-signed.apk; do
+            mv "$file" "${file%-signed.apk}.apk"
           done
         id: rename_apk
 
