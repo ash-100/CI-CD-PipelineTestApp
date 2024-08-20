@@ -46,7 +46,7 @@ jobs:
             echo "Processing file: $file"
             mv "${file}" "${file%-signed.apk}.apk"
             echo "Renamed $file to ${file%-signed.apk}.apk"
-            echo "final_name=${file%-signed.apk}.apk}" >> $GITHUB_OUTPUT
+            echo "final_name=${file%-signed.apk}.apk" >> $GITHUB_OUTPUT
           done
           echo "Files after renaming:"
           ls -la
