@@ -35,9 +35,17 @@ jobs:
         # override default build-tools version (33.0.0) -- optional
           BUILD_TOOLS_VERSION: "34.0.0"
 
+      - name: Rename 
+        run: 
+          cd app/build/outputs/apk/release
+          for file in *-unsigned-signed.apk; do
+            mv "$file" "${file%-unsigned-signed.apk}.apk"
+          done
+        id: rename_apk
+
       - run: echo "Build status report=${{ job.status }}."
       - name: Upload App Bundle
         uses: actions/upload-artifact@v1
         with:
           name: aab
-          path: ${{steps.sign_aab.outputs.signedReleaseFile}}
+          path: app/build/outputs/apk/release/*.apk
