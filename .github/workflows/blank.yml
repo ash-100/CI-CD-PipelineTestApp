@@ -48,10 +48,6 @@ jobs:
 
         id: rename_apk
 
-      - name: List files after renaming
-        run: ls -la 
-             echo "Path:${{steps.sign_aab.outputs.signedReleaseFile}}"
-
       - run: echo "Build status report=${{ job.status }}."
       - name: Upload App Bundle
         uses: actions/upload-artifact@v1
