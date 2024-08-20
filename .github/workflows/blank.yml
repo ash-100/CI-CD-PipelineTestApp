@@ -42,6 +42,7 @@ jobs:
           # Read the output file name
           SIGNED_FILE="${{steps.build.outputs.signedReleaseFile}}"
           RENAMED_FILE="${SIGNED_FILE%-signed.apk}.apk"
+          cd app/build/outputs/apk/release
           mv "$SIGNED_FILE" "$RENAMED_FILE"
           echo "Renamed file: $RENAMED_FILE"
           echo "::set-output name=renamedReleaseFile::$RENAMED_FILE"
