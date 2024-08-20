@@ -39,7 +39,7 @@ jobs:
         run: |
           cd app/build/outputs/apk/release
           for file in *-signed.apk; do
-            mv "$file" "${file%-signed.apk}.apk"
+            mv "${file}.apk" "${file%-signed.apk}.apk"
           done
         id: rename_apk
 
