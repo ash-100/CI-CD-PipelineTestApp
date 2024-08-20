@@ -64,6 +64,6 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: aab
-          path: "${{steps.rename_apk.outputs.final_name}}"
+          path: "app/build/outputs/apk/release/${{steps.rename_apk.outputs.final_name}}"
 
       - run: echo "${SIGNED_RELEASE_FILE}"
