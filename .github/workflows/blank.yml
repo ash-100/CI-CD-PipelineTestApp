@@ -35,20 +35,28 @@ jobs:
         # override default build-tools version (33.0.0) -- optional
           BUILD_TOOLS_VERSION: "34.0.0"
 
+      - name: Check path
+        run: basename "$(pwd)"
 
-      - name: Rename AAB
-        id: rename_aab
+      - name: Rename signed APK file
         run: |
-          # Read the output file name
-          SIGNED_FILE="${{steps.build.outputs.signedReleaseFile}}"
-          RENAMED_FILE="${SIGNED_FILE%-signed.apk}.apk"
           cd app/build/outputs/apk/release
-          mv "$SIGNED_FILE" "$RENAMED_FILE"
-          echo "Renamed file: $RENAMED_FILE"
-          echo "::set-output name=renamedReleaseFile::$RENAMED_FILE"
+          for file in *-signed.apk; do
+            echo "Processing file: $file"
+            mv "${file}" "${file%-signed.apk}.apk"
+            echo "Renamed $file to ${file%-signed.apk}.apk"
+          done
+          echo "Files after renaming:"
+          ls -la
 
-      - name: Upload Renamed AAB
-        uses: actions/upload-artifact@v3
+        id: rename_apk
+        
+      - name: Check path
+        run: basename "$(pwd)"
+
+      - run: echo "Build status report=${{ job.status }}."
+      - name: Upload App Bundle
+        uses: actions/upload-artifact@v1
         with:
-          name: renamed-release
-          path: ${{steps.rename_aab.outputs.renamedReleaseFile}}
+          name: aab
+          path: /*.apk
