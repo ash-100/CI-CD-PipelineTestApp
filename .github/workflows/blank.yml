@@ -41,18 +41,10 @@ jobs:
         id: rename_apk
         run: |
           cd app/build/outputs/apk/release
-          
-          file=$(ls *unsigned-signed.apk)
-          
-          if [ -n "$file" ]; then
-              echo "Processing file: $file"
-              new_name="${file%-unsigned-signed.apk}.apk"
-              mv "$file" "$new_name"
-              echo "Renamed $file to $new_name"
-              echo "final_name=$new_name" >> $GITHUB_OUTPUT
-          else
-              echo "No file found matching the pattern."
-              
+          for file in *unsigned-signed.apk; do
+            mv "${file}" "${file%-unsigned-signed.apk}.apk"
+            echo "final_name=${file%-unsigned-signed.apk}.apk" >> $GITHUB_OUTPUT
+          done
           echo "Files after renaming:"
           ls -la
 
