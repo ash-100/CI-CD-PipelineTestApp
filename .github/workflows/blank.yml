@@ -2,7 +2,7 @@ name: CI/CD Pipeline - Sign APK
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feature/**" ]
   pull_request:
     branches: [ "main" ]
 
@@ -41,12 +41,18 @@ jobs:
         id: rename_apk
         run: |
           cd app/build/outputs/apk/release
-          for file in *unsigned-signed.apk; do
-            echo "Processing file: $file"
-            mv "${file}" "${file%-unsigned-signed.apk}.apk"
-            echo "Renamed $file to ${file%-unsigned-signed.apk}.apk"
-            echo "final_name=${file%-unsigned-signed.apk}.apk" >> $GITHUB_OUTPUT
-          done
+          
+          file=$(ls *unsigned-signed.apk)
+          
+          if [ -n "$file" ]; then
+              echo "Processing file: $file"
+              new_name="${file%-unsigned-signed.apk}.apk"
+              mv "$file" "$new_name"
+              echo "Renamed $file to $new_name"
+              echo "final_name=$new_name" >> $GITHUB_OUTPUT
+          else
+              echo "No file found matching the pattern."
+              
           echo "Files after renaming:"
           ls -la
 
