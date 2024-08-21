@@ -1,6 +1,17 @@
+import java.io.ByteArrayOutputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+}
+
+fun getGitHash(): String {
+    val stdout = ByteArrayOutputStream()
+    exec {
+        commandLine("git", "rev-parse", "--short", "HEAD")
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
 }
 
 android {
@@ -67,13 +78,3 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
-
-fun getGitHash(): String {
-    val stdout = ByteArrayOutputStream()
-    exec {
-        commandLine("git", "rev-parse", "--short", "HEAD")
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
-}
-
