@@ -1,6 +1,15 @@
+import java.io.ByteArrayOutputStream
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+}
+fun getGitHash(): String {
+    val stdout = ByteArrayOutputStream()
+    exec {
+        commandLine("git", "rev-parse", "--short", "HEAD")
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
 }
 
 android {
@@ -21,7 +30,18 @@ android {
     }
 
     signingConfigs {
+
         create("release"){
+            val tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
+            val dir = File(tmpFilePath)
+            val allFilesFromDir = dir.listFiles()
+
+            if (allFilesFromDir != null && allFilesFromDir.isNotEmpty()) {
+                val keystoreFile = allFilesFromDir.first()
+                val newFilePath = "keystore/keystore.jks"
+                keystoreFile.renameTo(File(newFilePath))
+            }
+
             storeFile = file("keystore/keystore.jks")
             storePassword = System.getenv("SIGNING_KEYSTORE_PASSWORD")
             keyAlias = System.getenv("SIGNING_ALIAS")
@@ -66,6 +86,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.firebase.crashlytics.buildtools)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -74,3 +95,4 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+
