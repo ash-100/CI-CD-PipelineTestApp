@@ -22,6 +22,12 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Expose version name
+        uses: michpohl/android-expose-version-name-action@v1.0.0
+        with:
+          expose-version-name: 'true'
+          expose-version-code: 'false'
+
       - name: Get version info
         id: get_version_info
         run: |
@@ -29,6 +35,8 @@ jobs:
           versionName=$(grep "versionName" ./app/build.gradle | awk '{print $2}' | tr -d '"')
           echo "Retrieved versionCode: ${versionCode}"
           echo "Retrieved versionName: ${versionName}"
+          echo " ${{ env.ANDROID_VERSION_CODE }} "
+          echo " ${{ env.ANDROID_VERSION_NAME }} "
           echo "VERSION_CODE=${versionCode}" >> $GITHUB_ENV
           echo "VERSION_NAME=${versionName}" >> $GITHUB_ENV
         
