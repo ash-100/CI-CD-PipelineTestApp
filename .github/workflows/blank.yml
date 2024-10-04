@@ -57,3 +57,9 @@ jobs:
           name: apk
           path: "app/build/outputs/apk/release/${{steps.rename_apk.outputs.final_name}}"
 
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ steps.rename_apk.outputs.final_name }}  
+          files: app/build/outputs/apk/release/${{ steps.rename_apk.outputs.final_name }}  
+
