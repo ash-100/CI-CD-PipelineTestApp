@@ -62,4 +62,5 @@ jobs:
         with:
           name: ${{ steps.rename_apk.outputs.final_name }}  
           files: app/build/outputs/apk/release/${{ steps.rename_apk.outputs.final_name }}  
+          tag_name: ${{ steps.rename_apk.outputs.final_name }}  
 
