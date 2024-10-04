@@ -22,6 +22,9 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: List files
+        run: ls -R
+
       - name: Get version info
         id: get_version_info
         run: |
