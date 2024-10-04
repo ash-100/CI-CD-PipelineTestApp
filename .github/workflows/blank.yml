@@ -25,14 +25,15 @@ jobs:
       - name: Expose version name
         uses: michpohl/android-expose-version-name-action@v1.0.0
         with:
+          path: app/build.gradle.kts
           expose-version-name: 'true'
-          expose-version-code: 'false'
+          expose-version-code: 'true'
 
       - name: Get version info
         id: get_version_info
         run: |
-          versionCode=$(grep "versionCode" ./app/build.gradle | awk '{print $2}')
-          versionName=$(grep "versionName" ./app/build.gradle | awk '{print $2}' | tr -d '"')
+          versionCode=$(grep "versionCode" ./app/build.gradle.kts | awk '{print $2}')
+          versionName=$(grep "versionName" ./app/build.gradle.kts | awk '{print $2}' | tr -d '"')
           echo "Retrieved versionCode: ${versionCode}"
           echo "Retrieved versionName: ${versionName}"
           echo " ${{ env.ANDROID_VERSION_CODE }} "
