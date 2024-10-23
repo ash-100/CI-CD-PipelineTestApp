@@ -1,78 +1,56 @@
-name: CI/CD Pipeline - Sign APK
+
+# APK Build workflow
+
+name: Build APK
 
 on:
   push:
-    branches: [ "main", "feature/**" ]
-  pull_request:
-    branches: [ "main" ]
-
+    branches:
+      - main
+      - 'beta/*'
+      - 'release/*'
+# Where will they run
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:        
-      - uses: actions/checkout@v3
+    steps:
+      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+
+      - name: Checkout code
+        uses: actions/checkout@v4
       
-      - name: Set up JDK
-        uses: actions/setup-java@v3
+      - run: echo "Setting up JDK" 
+      - name: set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          distribution: temurin
           java-version: '17'
+          distribution: 'temurin'
           cache: gradle
-          
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
 
-      - name: Get version info
-        id: get_version_info
-        run: |
-          versionCode=$(grep "versionCode" ./app/build.gradle.kts | awk '{print $2}')
-          versionName=$(grep "versionName" ./app/build.gradle.kts | awk '{print $2}' | tr -d '"')
-          echo "Retrieved versionCode: ${versionCode}"
-          echo "Retrieved versionName: ${versionName}"
-          echo " ${{ env.ANDROID_VERSION_CODE }} "
-          echo " ${{ env.ANDROID_VERSION_NAME }} "
-          echo "VERSION_CODE=${versionCode}" >> $GITHUB_ENV
-          echo "VERSION_NAME=${versionName}" >> $GITHUB_ENV
-        
-      - name: Bundle 'release' with Gradle
-        run: ./gradlew assembleRelease 
-        
-      - name: Sign APK
-        id: sign_apk
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.KEYSTORE_BASE_64 }}
-          alias: ${{ secrets.SIGNING_ALIAS }}
-          keyStorePassword: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
-          keyPassword: ${{ secrets.SIGNING_ALIAS_PASSWORD }}  
+      - name: Decode Keystore
         env:
-          BUILD_TOOLS_VERSION: "34.0.0"
+          ENCODED_KEYSTORE: ${{ secrets.KEYSTORE_BASE_64 }}
 
-      - name: Rename signed APK file
-        id: rename_apk
         run: |
-          cd app/build/outputs/apk/release
-          for file in *unsigned-signed.apk; do
-            mv "${file}" "${file%-unsigned-signed.apk}.apk"
-            echo "final_name=${file%-unsigned-signed.apk}.apk" >> $GITHUB_OUTPUT
-          done
-          echo "Files after renaming:"
-          ls -la
+          mkdir -p secrets
+          echo $ENCODED_KEYSTORE > secrets/keystore-b64.txt
+          base64 -d secrets/keystore-b64.txt > secrets/keystore.jks
 
-      - name: Build Status
-        run: echo "Build status report=${{ job.status }}."
+      - run: echo "Building Debug APK."  
+      - name: Build with Gradle
+        env:
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEYSTORE_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        run: chmod +x gradlew && ./gradlew assembleRelease
+      - run: echo "Build status report=${{ job.status }}."
+
+      - name: Get release file apk path
+        id: releaseApk
+        run: echo "apkfile=$(find app/build/outputs/apk/release/*.apk)" >> $GITHUB_OUTPUT
       
       - name: Upload App Bundle
         uses: actions/upload-artifact@v4
         with:
           name: apk
-          path: "app/build/outputs/apk/release/${{steps.rename_apk.outputs.final_name}}"
-
-      - name: Create release
-        uses: softprops/action-gh-release@v2
-        with:
-          name: ${{ env.VERSION_NAME }}  
-          files: app/build/outputs/apk/release/${{ steps.rename_apk.outputs.final_name }}  
-          tag_name: v${{ env.VERSION_CODE }}
-
+          path: ${{ steps.releaseApk.outputs.apkfile }}
