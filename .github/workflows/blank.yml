@@ -4,11 +4,7 @@
 name: Build APK
 
 on:
-  push:
-    branches:
-      - main
-      - 'beta/*'
-      - 'release/*'
+
   release:
     types: [published]
 
@@ -66,10 +62,15 @@ jobs:
       - name: Expose app version name
         run: echo "VERSION_NAME=$( ./gradlew -q app:printVersionName )" >> $GITHUB_ENV
 
+      - name: Get Tag Name
+        id: get_tag
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+
       - name: Create app release
         uses: softprops/action-gh-release@v1
         with: 
           generate_release_notes: true
           files: app/build/outputs/apk/release/*.apk
-          tag_name: ${{ env.VERSION_NAME }}
-          name: ${{ env.VERSION_NAME }}
+          tag_name: ${{ env.TAG_NAME }}
+
