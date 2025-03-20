@@ -9,6 +9,8 @@ on:
       - main
       - 'beta/*'
       - 'release/*'
+  release:
+    types: [published]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
